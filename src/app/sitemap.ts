@@ -1,6 +1,8 @@
+export const dynamic = "force-static";
 import type { MetadataRoute } from "next";
 
 const BASE_URL = "https://tooltab.xyz";
+
 
 // Add new tools here — sitemap updates automatically
 const tools = [
