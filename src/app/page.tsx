@@ -1,65 +1,193 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Link from "next/link";
+import AdSlot from "@/components/AdSlot";
+
+// ─── SEO Metadata ────────────────────────────────────────────────────────────
+
+const BASE_URL = "https://tooltab.xyz";
+
+export const metadata: Metadata = {
+  title: "ToolsTab — Free Online Tools for Developers, Designers & Everyone",
+  description:
+    "Free online tools for developers, designers, and everyday use. JSON formatter, UUID generator, Base64 encoder, regex tester, password generator, and more. No signup, no fluff.",
+  keywords: [
+    "free online tools for developers",
+    "online developer tools",
+    "json formatter online",
+    "uuid generator",
+    "base64 encoder decoder",
+    "regex tester online",
+    "password generator",
+    "free web tools",
+    "toolstab",
+  ],
+  alternates: {
+    canonical: BASE_URL,
+  },
+  openGraph: {
+    title: "ToolsTab — Free Online Tools for Developers & Designers",
+    description:
+      "Fast, free, no signup. JSON formatter, UUID generator, Base64 encoder, regex tester, and 16+ more tools.",
+    url: BASE_URL,
+    siteName: "ToolsTab",
+    type: "website",
+    images: [
+      {
+        url: `${BASE_URL}/og/default.png`,
+        width: 1200,
+        height: 630,
+        alt: "ToolsTab — Free Online Tools",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolsTab — Free Online Tools for Developers & Designers",
+    description:
+      "Fast, free, no signup. 16+ tools including JSON formatter, UUID generator, regex tester, and more.",
+    images: [`${BASE_URL}/og/default.png`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+};
+
+// ─── Tools List ───────────────────────────────────────────────────────────────
+
+const tools = [
+  { href: "/diff",             title: "Text Diff Checker",       desc: "Compare two texts side by side. See exactly what changed, added, or removed.", tag: "TEXT",     icon: "⇄" },
+  { href: "/timezone",         title: "Timezone Meeting Planner", desc: "Pick multiple timezones and find the best overlap for your meeting.",           tag: "TIME",     icon: "🕐" },
+  { href: "/wordcount",        title: "Word Counter",             desc: "Count words, characters, sentences, and reading time instantly.",                tag: "TEXT",     icon: "Aa" },
+  { href: "/password",         title: "Password Generator",       desc: "Generate strong, random passwords with custom length and character options.",    tag: "SECURITY", icon: "🔒" },
+  { href: "/json-formatter",   title: "JSON Formatter",           desc: "Format, validate, and minify JSON instantly. Catch errors fast.",                tag: "DEV",      icon: "{}" },
+  { href: "/lorem-ipsum",      title: "Lorem Ipsum Generator",    desc: "Generate placeholder text by paragraphs, sentences, or words.",                 tag: "DESIGN",   icon: "¶"  },
+  { href: "/uuid",             title: "UUID Generator",           desc: "Generate unique UUIDs instantly. Copy with one click.",                          tag: "DEV",      icon: "#"  },
+  { href: "/timestamp",        title: "Timestamp Converter",      desc: "Convert Unix timestamps to readable dates and back.",                            tag: "DEV",      icon: "⏱" },
+  { href: "/base64",           title: "Base64 Encoder / Decoder", desc: "Encode or decode Base64 strings instantly.",                                     tag: "DEV",      icon: "64" },
+  { href: "/urlencode",        title: "URL Encoder / Decoder",    desc: "Encode or decode URL components and query strings.",                             tag: "DEV",      icon: "%" },
+  { href: "/hex-to-rgb",       title: "HEX to RGB Converter",     desc: "Convert HEX color codes to RGB and HSL values.",                                tag: "DESIGN",   icon: "🎨" },
+  { href: "/unit-converter",   title: "Unit Converter",           desc: "Convert length, weight, temperature, speed, and area.",                         tag: "UTIL",     icon: "⚖" },
+  { href: "/markdown",         title: "Markdown Previewer",       desc: "Write Markdown and see a live preview instantly.",                               tag: "TEXT",     icon: "MD" },
+  { href: "/regex",            title: "Regex Tester",             desc: "Test regular expressions with live match highlighting.",                         tag: "DEV",      icon: ".*" },
+  { href: "/qr-code",          title: "QR Code Generator",        desc: "Generate QR codes from any URL or text instantly.",                              tag: "UTIL",     icon: "▦" },
+  { href: "/image-compressor", title: "Image Compressor",         desc: "Compress images in your browser. No upload needed.",                            tag: "DESIGN",   icon: "🖼" },
+];
+
+// ─── JSON-LD Schema ───────────────────────────────────────────────────────────
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    // WebSite schema — enables Google Sitelinks Search Box
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: "ToolsTab",
+      description: "Free online tools for developers, designers, and everyday use.",
+      inLanguage: "en",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${BASE_URL}/?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    // ItemList schema — helps Google show your tools as rich results
+    {
+      "@type": "ItemList",
+      "@id": `${BASE_URL}/#toollist`,
+      name: "Free Online Developer Tools",
+      description: "A collection of free online tools for developers, designers, and everyday tasks.",
+      numberOfItems: tools.length,
+      itemListElement: tools.map((tool, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: tool.title,
+        description: tool.desc,
+        url: `${BASE_URL}${tool.href}`,
+      })),
+    },
+    // Organization schema — builds brand authority
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      name: "ToolsTab",
+      url: BASE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/logo.png`,
+      },
+    },
+  ],
+};
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-16 flex-1">
+        <div className="mb-10 sm:mb-12">
+          <p className="text-[#e8500a] font-display font-bold text-xs sm:text-sm tracking-widest uppercase mb-3">
+            Free Online Tools
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl text-[#0f0f0f] leading-none mb-4">
+            Simple tools.<br />No fluff.
+          </h1>
+          <p className="text-[#9e9e8f] text-base sm:text-lg max-w-md mb-6">
+            Fast, free, no signup. Just pick a tool and get to work.
+          </p>
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#tools"
+            className="inline-flex items-center gap-2 text-sm font-display font-bold text-[#0f0f0f] border-b-2 border-[#e8500a] pb-0.5 hover:text-[#e8500a] transition-colors duration-200"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            Browse tools
           </a>
         </div>
+
+        <AdSlot label="Top Banner" />
+
+        <div id="tools" className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8">
+          {tools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              style={{ border: "2px solid #0f0f0f" }}
+              className="group block p-4 sm:p-6 rounded hover:bg-[#0f0f0f] hover:text-[#f5f2eb] transition-colors duration-200"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <span className="text-xs font-display font-bold tracking-widest text-[#e8500a]">
+                  {tool.tag}
+                </span>
+                <span className="text-lg font-mono text-[#9e9e8f] group-hover:text-[#f5f2eb] transition-colors">
+                  {tool.icon}
+                </span>
+              </div>
+              <h2 className="font-display font-bold text-lg sm:text-xl mb-1 sm:mb-2">{tool.title}</h2>
+              <p className="text-sm text-[#9e9e8f] group-hover:text-[#f5f2eb] transition-colors leading-snug">
+                {tool.desc}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        <AdSlot label="Bottom Banner" />
       </main>
-    </div>
+    </>
   );
 }
